@@ -138,7 +138,7 @@ The game-level functions (`init_game_state`, `step_game`, `get_obs`) take action
 <p align="center">
   <img src="img/slimevolley_2v2_builtin.gif" width="45%"/> <img src="img/slimevolley_2v2_trained.gif" width="45%"/>
 </p>
-<p align="center">Left: four built-in AIs. Right: a CMA-ES-trained agent (lighter yellow is its built-in AI teammate, on the right team).</p>
+<p align="center">Left: four built-in AIs. Right: a CMA-ES-trained agent (yellow; its built-in AI teammate is pink).</p>
 
 ## Call for Contributions
 

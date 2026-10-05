@@ -64,6 +64,9 @@ LEFT, RIGHT = (0, 1), (2, 3)
 DIRECTION = jnp.array([-1, -1, 1, 1])
 START_X = jnp.array([-8.0, -16.0, 8.0, 16.0])  # players 0 and 2 start near the net, 1 and 3 at the back
 OBS_SIZE = 20
+# One hue per player: each team keeps its 1v1 colour for player 0 / 2, the teammate gets a clearly different one.
+PLAYER_COLORS = [(0, 87, 184), (0, 190, 150), (254, 221, 0), (235, 80, 170)]  # blue, teal | yellow, pink
+DAY_PLAYER_COLORS = [(240, 75, 0), (150, 60, 200), (0, 150, 255), (40, 170, 70)]
 
 
 @dataclass
@@ -187,22 +190,18 @@ def detect_done(game_state):
 
 
 def render(game_state):
-    """An RGB image (numpy) of the game, as in 1v1; the second player of each team is drawn in a lighter shade."""
+    """An RGB image (numpy) of the game, as in 1v1, with one colour per player (PLAYER_COLORS)."""
     game = sv.Game(sv.initGameState(0.0, 0.0))
     canvas = sv.create_canvas(c=sv.BACKGROUND_COLOR)
     canvas = game.fence.display(canvas)
     canvas = game.fenceStub.display(canvas)
     ball = game_state.ball
-    colors = [sv.AGENT_LEFT_COLOR, _lighter(sv.AGENT_LEFT_COLOR), sv.AGENT_RIGHT_COLOR, _lighter(sv.AGENT_RIGHT_COLOR)]
+    colors = PLAYER_COLORS if sv.BACKGROUND_COLOR == (11, 16, 19) else DAY_PLAYER_COLORS
     for i in range(N_PLAYERS):
         canvas = sv.Agent(player(game_state.agents, i), colors[i]).display(canvas, ball.x, ball.y)
     canvas = sv.Particle(ball, sv.BALL_COLOR).display(canvas)
     canvas = game.ground.display(canvas)
     return sv.downsize_image(canvas)
-
-
-def _lighter(color, amount=0.45):
-    return tuple(int(c + (255 - c) * amount) for c in color)
 
 
 class SlimeVolley2v2(VectorizedTask):
