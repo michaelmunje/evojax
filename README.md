@@ -129,6 +129,16 @@ We also show that the modular design of EvoJAX allows its components to be used 
 In this [task](https://otoro.net/slimevolley/), the agent's goal is to get the ball to land on the ground of its opponent's side, causing its opponent to lose a life. The episode ends when either agent loses all five lives, or after the time limit. An agent receives a reward of +1 when its opponent loses or -1 when it loses a life.
 EvoJAX is able to train the agent in under 5 minutes on a single GPU, compared hours on multiple CPUs.
 This implementation is based on the [Slime Volleyball Gym Environment](https://github.com/hardmaru/slimevolleygym), which is a Python port of the original JavaScript version of the [game](https://otoro.net/slimevolley/) that you can play in the web browser. In all of these versions, the built-in AI opponent and the less-than-ideal physics are identical.
+* [2v2 Slime Volleyball](examples/train_slimevolley_2v2.py) (this fork) -
+Two teams of two slimes, with the same physics and built-in AI ([task](evojax/task/slimevolley_2v2.py)). Lives and rewards are per team, the ball bounces off all four players, and teammates cannot overlap, so they have to share their half of the court.
+Each player observes itself, the ball, both opponents and its teammate (20 values; the first 12 have the 1v1 layout, so the 1v1 built-in AI can play any slot).
+The game-level functions (`init_game_state`, `step_game`, `get_obs`) take actions for any subset of the four players, for multi-agent and ad hoc teamwork experiments; the `SlimeVolley2v2` task trains one player alongside a built-in AI teammate.
+`examples/render_slimevolley_2v2.py` renders a game.
+
+<p align="center">
+  <img src="img/slimevolley_2v2_builtin.gif" width="45%"/> <img src="img/slimevolley_2v2_trained.gif" width="45%"/>
+</p>
+<p align="center">Left: four built-in AIs. Right: a CMA-ES-trained agent (lighter yellow is its built-in AI teammate, on the right team).</p>
 
 ## Call for Contributions
 
